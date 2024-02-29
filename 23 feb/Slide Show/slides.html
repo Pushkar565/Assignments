@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        
+        .slideshow-container {
+            max-width: 100%;
+            position: relative;
+            margin: auto;
+        }
+
+        
+        .slide {
+            display: none;
+        }
+
+        
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #f2f2f2;
+            border: none;
+            user-select: none;
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .next {
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="slideshow-container">
+        <div class="slide"><img src="https://picsum.photos/id/1015/600/400" alt="Image 1"></div>
+        <div class="slide"><img src="https://picsum.photos/id/1016/600/400" alt="Image 2"></div>
+
+
+
+       
+
+        <button class="prev" onclick="changeSlide(-1)">Previous</button>
+        <button class="next" onclick="changeSlide(1)">Next</button>
+    </div>
+
+    <script>
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        
+        function showSlide() {
+            slides.forEach((slide) => {
+                slide.style.display = 'none';
+            });
+            slides[slideIndex].style.display = 'block';
+        }
+
+       
+        function changeSlide(n) {
+            slideIndex += n;
+            if (slideIndex >= slides.length) {
+                slideIndex = 0;
+            } else if (slideIndex < 0) {
+                slideIndex = slides.length - 1;
+            }
+            showSlide();
+        }
+
+       
+        let slideshowInterval;
+        function startSlideshow() {
+            slideshowInterval = setInterval(() => {
+                changeSlide(1);
+            }, 3000); 
+        }
+
+    
+        function stopSlideshow() {
+            clearInterval(slideshowInterval);
+        }
+
+      
+        showSlide();
+        startSlideshow();
+    </script>
+</body>
+</html>
