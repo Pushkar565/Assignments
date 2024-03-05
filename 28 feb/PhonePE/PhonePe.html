@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phone Pe</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    img {
+      height: 160px;
+
+    }
+
+    button {
+      margin-top: -10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    .processing {
+      font-size: 24px;
+      color: blue;
+    }
+    .success {
+      font-size: 24px;
+      color: green;
+    }
+    .failure {
+      font-size: 24px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <img src="image.png" alt="">
+    <div id="payment-container">
+      <button onclick="processPayment()">Process Payment</button>
+      <div id="payment-status"></div>
+    </div>
+  
+  </div>
+</body>
+</html>
+
+<script>
+ 
+ function  payment_Rej_Res(){
+  return new Promise(function(res,rej){
+      setTimeout(function(){
+       const taskComplete = Math.random() < 0.5;
+       if (taskComplete){
+        res()
+       }else{
+        rej()
+       }
+      },2000)
+  })
+ }
+
+ function processPayment(){
+  const paymentStatus = document.getElementById('payment-status');
+  paymentStatus.innerHTML = '<div class="processing">Processing Payment...</div>'
+  payment_Rej_Res()
+
+  .then (() =>{
+    paymentStatus.innerHTML = '<div class="success">Transaction Successful</div>'
+  })
+
+  .catch (() =>{
+    paymentStatus.innerHTML = '<div class="failure">Transaction Failed</div>'
+  })
+ }
+ 
+
+</script>
