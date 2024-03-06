@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id="orderButton" onclick="placeOrder()">Order Food</button>
+  
+  <div>
+  <input type="checkbox" value="Burger">Burger<br>
+  <input type="checkbox" value="Fries">Fries<br>
+  <input type="checkbox" value="Pizza">Pizza<br>
+  </div>
+  
+  <div>
+  <div id="orderImage"></div>
+  <div id="orderId"></div>
+  </div>
+</body>
+</html>
+
+<script>
+let orderCount = 0;
+ 
+function placeOrder(){
+  const checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+  let selectedFoods = [];
+  checkboxes.forEach((ele) => {selectedFoods.push(ele.value)}); 
+
+  if(selectedFoods.length == 0){
+    alert('Please select at least one food');
+    return;
+  }
+
+  let orderButton = document.getElementById('orderButton');
+  orderButton.disabled = true;
+
+  let promise = new Promise((res, rej) => {
+    setTimeout(() => {
+      res();
+    }, Math.random() * 5000);
+  });
+
+  promise.then(() => {
+    let orderImage = document.getElementById('orderImage');
+    let orderId = document.getElementById('orderId');
+    orderImage.innerHTML = '';
+    selectedFoods.forEach((food) => {
+      let img = document.createElement('img');
+      img.src = food.toLowerCase() + '.jpg';
+      orderImage.appendChild(img);
+    });
+    orderCount++;
+    orderId.innerText = 'Order ID: ' + orderCount;
+    orderButton.disabled = false;
+  });
+}
+</script>
