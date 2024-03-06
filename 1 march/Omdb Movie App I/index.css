@@ -1,0 +1,80 @@
+/* Reset default margin and padding */
+body, h1, h2, p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Center align the search box and button */
+#Search-box, #SearchBtn {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Style the button */
+#SearchBtn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+}
+
+#SearchBtn:hover {
+  background-color: #45a049;
+}
+
+/* Add spacing between elements */
+#movie-info {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Style the movie info elements */
+.movie {
+  text-align: center;
+  margin: 20px;
+  transition: transform 0.3s ease;
+}
+
+.movie:hover {
+  transform: translateY(-10px);
+}
+
+.movie h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.movie .details {
+  font-size: 18px;
+}
+
+.movie .year {
+  color: #666;
+}
+
+img {
+  width: 200px;
+  height: 300px;
+  margin: 10px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.1);
+}
+
+hr {
+  width: 100%;
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #ddd;
+}
