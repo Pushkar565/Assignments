@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Average of an array</title>
+</head>
+<body>
+  
+</body>
+
+</html>
+
+<script>
+
+  function sum(arr){
+    let totalSum = 0;
+    arr.forEach(element => {
+      totalSum += element;
+    });
+   
+    return totalSum;
+  }
+
+  function Avg(arr){ 
+
+    if (arr.length === 0) {
+        return 0;
+    }
+    let avgNum=sum(arr)
+
+    let avgTotal = avgNum / arr.length
+
+    
+    return avgTotal
+  }
+
+  const arr = [1, 2, 3, 4, 5];
+  const arr2 = [];
+
+  console.log(sum(arr)); 
+  console.log(Avg(arr));
+
+
+</script>
