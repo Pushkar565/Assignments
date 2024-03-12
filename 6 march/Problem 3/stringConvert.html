@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+</html>
+
+<script>
+  let arr = ["MA", "SA", "I", "SCH", "OOL"];
+
+  function convert(arr){
+    let result = [];
+    arr.forEach(element => {
+      let lowercaseElement = element.toLowerCase();
+      result.push(lowercaseElement);
+    });
+    return result;
+  }
+
+  console.log(convert(arr));
+</script>
