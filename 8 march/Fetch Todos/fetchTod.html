@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .list {
+      margin-top: 20px;
+    }
+
+    .list div {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .list h3 {
+      margin: 0;
+    }
+
+    .list p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 style="color: chocolate;">Todos</h1>
+  <section class="list">
+
+  </section>
+  
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <h1>Todos</h1>
+  <section class="list">
+
+  </section>
+  
+  <script>
+    fetch("https://jsonplaceholder.typicode.com/todos")
+    .then(response => response.json())
+    .then(data => {
+      let list = document.querySelector('.list');
+      
+      data.forEach(element => {
+        let div = document.createElement('div');
+        
+        let userId = document.createElement('p');
+        userId.innerHTML = "User ID: " + element.userId;
+
+        let id = document.createElement('h3'); 
+                id.innerHTML = "ID: " + element.id; 
+
+        let title = document.createElement('h3');
+        title.innerHTML = "Title: " + element.title;
+       
+        let status = document.createElement('h3');
+        status.innerHTML = "Status: " + (element.completed ? "Completed" : "Incomplete"); 
+
+        div.appendChild(userId); 
+                div.appendChild(id); 
+                div.appendChild(title); 
+                div.appendChild(status); 
+
+        list.appendChild(div); 
+            });
+    });
+  </script>
+</body>
+</html>
