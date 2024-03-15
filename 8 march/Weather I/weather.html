@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #container {
+      display: flex;
+      justify-content: flex-end;
+      position: absolute;
+      top: 0px;
+      right: 50%;
+    }
+  
+    .mapouter {
+      position: relative;
+      text-align: right;
+      height: 250px;
+      width: 500px; /* Set map width to 250px */
+    }
+  
+    .gmap_canvas {
+      overflow: hidden;
+      background: none!important;
+      height: 500px;
+      width: 250px; /* Set map width to 250px */
+    }
+  </style>
+</head>
+<body>
+  <input id="input" type="text" placeholder="Enter Place">
+  <button id="button">Search</button>
+   <div id="container2"></div>
+  <div id="container"></div>
+
+  <script src="weather.js"></script>
+</body>
+</html>
+
+
