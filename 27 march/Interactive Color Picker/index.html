@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Picker App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .color-picker {
+      margin-bottom: 20px;
+    }
+
+    .color-preview {
+      width: 200px;
+      height: 200px;
+      margin-top: 10px;
+    }
+
+    .error-msg {
+      color: red;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root" class="container">
+    <h1>Color Picker App</h1>
+    <div id="colorPicker"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      const ColorPicker = () => {
+        const [color, setColor] = React.useState('#FFFFFF'); // Default color is white
+        const [isValidColor, setIsValidColor] = React.useState(true);
+
+        const handleColorChange = (event) => {
+          const inputValue = event.target.value.trim();
+          if (/^#[0-9A-Fa-f]{3,6}$/.test(inputValue)) {
+            setColor(inputValue);
+            setIsValidColor(true);
+          } else {
+            setIsValidColor(false);
+          }
+        };
+
+        return (
+          <div className="color-picker">
+            <label htmlFor="colorInput">Enter a HEX color code:</label>
+            <input
+              type="text"
+              id="colorInput"
+              value={color}
+              onChange={handleColorChange}
+              style={{ marginRight: '10px' }}
+            />
+            <div
+              className="color-preview"
+              style={{
+                backgroundColor: isValidColor ? color : '#FFFFFF',
+              }}
+            ></div>
+            {!isValidColor && <p className="error-msg">Invalid HEX color code!</p>}
+          </div>
+        );
+      };
+
+      ReactDOM.render(<ColorPicker />, document.getElementById('colorPicker'));
+    </script>
+  </div>
+</body>
+</html>

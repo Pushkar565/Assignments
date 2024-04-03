@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Form</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      const App = () => {
+        const [hobbies, setHobbies] = React.useState(['']);
+
+        const handleInputChange = (index, event) => {
+          const newHobbies = [...hobbies];
+          newHobbies[index] = event.target.value;
+          setHobbies(newHobbies);
+        };
+
+        const handleAddInput = () => {
+          setHobbies([...hobbies, '']);
+        };
+
+        const handleRemoveInput = (index) => {
+          if (hobbies.length === 1) return; // Ensure at least one input field remains
+          const newHobbies = [...hobbies];
+          newHobbies.splice(index, 1);
+          setHobbies(newHobbies);
+        };
+
+        const handleSubmit = (event) => {
+          event.preventDefault();
+          console.log(hobbies);
+        };
+
+        return (
+          <div>
+            <h1>Dynamic Form</h1>
+            <form onSubmit={handleSubmit}>
+              {hobbies.map((hobby, index) => (
+                <div key={index}>
+                  <input
+                    type="text"
+                    value={hobby}
+                    onChange={(event) => handleInputChange(index, event)}
+                  />
+                  {index !== 0 && (
+                    <button type="button" onClick={() => handleRemoveInput(index)}>
+                      Remove
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button type="button" onClick={handleAddInput}>Add Hobby</button>
+              <button type="submit">Submit</button>
+            </form>
+          </div>
+        );
+      };
+
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
