@@ -1,28 +1,36 @@
+<!-- JSX and Dynamic Rendering in React -->
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>JSX and Babel</title>
-</head>
-<body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script type="text/babel">
-    // Simple JSX Element
-    const simpleElement = <p>Seize the day</p>;
-    ReactDOM.render(simpleElement, document.getElementById('root'));
+  <head>
+    <meta charset="UTF-8" />
+    <title>JSX and Babel</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      const Element = <p>Seize the day</p>;
+      root.render(Element);
+      
 
-    // Dynamic Content in JSX
-    const dynamicText = "Seize the day dynamically";
-    const dynamicElement = <p>{dynamicText}</p>;
-    ReactDOM.render(dynamicElement, document.getElementById('root'));
+    //Dynamic Rendering in React
+      const dynamicText = "Seize the day";
+      const dynamicEle = <p>{dynamicText}</p>;
+      root.render(dynamicEle);
 
-    // Conditional Rendering in JSX
-    const condition = true;
-    const conditionalElement = condition ? <p>Condition is true</p> : <p>Condition is false</p>;
-    ReactDOM.render(conditionalElement, document.getElementById('root'));
-  </script>
-</body>
+
+
+      // Conditional Rendering in JSX
+       
+      const booleanVal = true;
+      const ConditionaEle = booleanVal ? <p>Conditon is True</p> : <p>Conditon is False</p>;
+      root.render(ConditionaEle)
+
+
+    </script>
+  </body>
 </html>
