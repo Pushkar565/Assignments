@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const { useState } = React;
+
+    // GreetingCard Component
+    const GreetingCard = ({ greeting, name }) => {
+      return (
+        <div className="card">
+          <h2>{greeting}</h2>
+          <p>Dear {name},</p>
+          <p>Wishing you a fantastic day!</p>
+        </div>
+      );
+    };
+
+    // App Component
+    const App = () => {
+      const [greetingCards] = useState([
+        { greeting: 'Happy Birthday', name: 'John Doe' },
+        { greeting: 'Congratulations', name: 'Jane Smith' },
+        { greeting: 'Merry Christmas', name: 'Emily Johnson' },
+      ]);
+
+      return (
+        <div className="app">
+          {greetingCards.map((card, index) => (
+            <GreetingCard key={index} greeting={card.greeting} name={card.name} />
+          ))}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</html>

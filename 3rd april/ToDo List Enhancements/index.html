@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const ToDoList = () => {
+      const [todos, setTodos] = useState([
+        { id: 1, text: 'Complete task 1', completed: false },
+        { id: 2, text: 'Finish task 2', completed: true },
+        { id: 3, text: 'Submit task 3', completed: false },
+      ]);
+      const [newTodo, setNewTodo] = useState('');
+
+      const handleAddTodo = () => {
+        if (newTodo.trim()) {
+          const newId = todos.length + 1;
+          const newTodoItem = { id: newId, text: newTodo, completed: false };
+          setTodos([...todos, newTodoItem]);
+          setNewTodo('');
+        }
+      };
+
+      const handleToggle = (id) => {
+        setTodos(todos.map(todo =>
+          todo.id === id ? { ...todo, completed: !todo.completed } : todo
+        ));
+      };
+
+      const handleDelete = (id) => {
+        setTodos(todos.filter(todo => todo.id !== id));
+      };
+
+      return (
+        <div className="todo-list">
+          <form onSubmit={e => { e.preventDefault(); handleAddTodo(); }}>
+            <input
+              type="text"
+              value={newTodo}
+              onChange={e => setNewTodo(e.target.value)}
+              placeholder="Add new ToDo"
+            />
+            <button type="submit">Add</button>
+          </form>
+          {todos.map(todo => (
+            <div key={todo.id} className={todo.completed ? 'completed' : ''}>
+              <input
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() => handleToggle(todo.id)}
+              />
+              <span>{todo.text}</span>
+              <button onClick={() => handleDelete(todo.id)}>Delete</button>
+            </div>
+          ))}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<ToDoList />, document.getElementById('root'));
+  </script>
+</html>
