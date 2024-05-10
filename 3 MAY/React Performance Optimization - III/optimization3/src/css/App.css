@@ -1,0 +1,15 @@
+.App {
+  text-align: center;
+}
+
+.Post {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+}
+
+.PostList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
