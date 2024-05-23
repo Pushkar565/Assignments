@@ -1,0 +1,1 @@
+File 'test.txt' renamed to 'new.txt'

@@ -1,91 +1,33 @@
-const fs = require('fs');
-const path = require('path');
+const { error } = require("console");
+const fs = require("fs");
 
-const operation = process.argv[2];
-const file = process.argv[3];
-const content = process.argv.slice(4).join(' ');
+// Reading 'test.txt' file
+fs.readFile("./test.txt", "utf-8", (err, data) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(data);
+  }
+});
 
-switch (operation) {
-  case 'read':
-    if (!file) {
-      console.log('Missing file argument');
-      break;
-    }
-    try {
-      const data = fs.readFileSync(file, 'utf8');
-      console.log(data);
-    } catch (err) {
-      console.error(`Error reading file '${file}': ${err.message}`);
-    }
-    break;
+// Appending content to 'test.txt'
+fs.appendFileSync("./test.txt", "Content appended to the file 'test.txt'\n");
 
-  case 'delete':
-    if (!file) {
-      console.log('Missing file argument');
-      break;
-    }
-    try {
-      fs.unlinkSync(file);
-      console.log(`File '${file}' deleted`);
-    } catch (err) {
-      console.error(`Error deleting file '${file}': ${err.message}`);
-    }
-    break;
+// Writing content to 'test1.txt'
+fs.writeFileSync("./test1.txt", "File 'test.txt' deleted");
 
-  case 'create':
-    if (!file) {
-      console.log('Missing file argument');
-      break;
-    }
-    try {
-      fs.writeFileSync(file, '');
-      console.log(`File '${file}' created`);
-    } catch (err) {
-      console.error(`Error creating file '${file}': ${err.message}`);
-    }
-    break;
+// Writing content to 'test2.txt'
+fs.writeFileSync("./test2.txt", "File 'test.txt' renamed to 'new.txt'");
 
-  case 'append':
-    if (!file || !content) {
-      console.log('Missing file or content argument');
-      break;
-    }
-    try {
-      fs.appendFileSync(file, `${content}\n`);
-      console.log(`Content appended to the file '${file}'`);
-    } catch (err) {
-      console.error(`Error appending to file '${file}': ${err.message}`);
-    }
-    break;
+// Reading the current directory
+fs.readdir("./", (err, files) => {
+  if (err) {
+    console.error("Error reading dir:", err);
+    return;
+  }
 
-  case 'rename':
-    if (!file || !content) {
-      console.log('Missing file or new name argument');
-      break;
-    }
-    const newFile = path.join(path.dirname(file), content);
-    try {
-      fs.renameSync(file, newFile);
-      console.log(`File '${file}' renamed to '${newFile}'`);
-    } catch (err) {
-      console.error(`Error renaming file '${file}' to '${newFile}': ${err.message}`);
-    }
-    break;
-
-  case 'list':
-    if (!file) {
-      console.log('Missing directory argument');
-      break;
-    }
-    try {
-      const files = fs.readdirSync(file);
-      console.log(`Contents of '${file}':`);
-      files.forEach(f => console.log(f));
-    } catch (err) {
-      console.error(`Error listing directory '${file}': ${err.message}`);
-    }
-    break;
-
-  default:
-    console.log(`Invalid operation '${operation}'`);
-}
+  console.log("Files in the current dir:");
+  files.forEach((file) => {
+    console.log(file);
+  });
+});
