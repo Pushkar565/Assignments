@@ -1,0 +1,120 @@
+Mongo Query 1:
+Write Mongo query to retrieve the documents from the payments collection with an amount lesser than or equal to 30.
+
+ANS:  db.payments.find({
+      amount:{$lte : 30}
+      })
+
+
+Mongo Query 2:
+Write Mongo query to retrieve orders sorted by order date in ascending order.
+
+ANS:   db.orders.find().sort({order_date:1})
+
+
+Mongo Query 3:
+Write Mongo query to get the total number of orders count per customer ?
+
+ANS: db.orders.aggregate([{
+  $group:{
+    _id: '$customer_id',
+    count: {sum: 1}
+  }
+}])
+
+Mongo Query 4:
+Write Mongo query to find the average total of orders made by customers who live in California(CA).
+The answer should be a with a key avgTotal and it's value should Integer not a Float.
+
+ANS:  db.buyers.aggregate([
+  {
+    $match: { "address.state": "CA" }
+  },
+  {
+    $lookup: {
+      from: "orders",
+      localField: "_id",
+      foreignField: "customer_id",
+      as: "orders"
+    }
+  },
+  {
+    $unwind: "$orders"
+  },
+  {
+    $group: {
+      _id: null,
+      avgTotal: { $avg: "$orders.total" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      avgTotal: { $round: ["$avgTotal", 0] }  // Ensuring the value is an integer
+    }
+  }
+])
+
+Mongo Query 5:
+Write Mongo query to find Most used payment Method as paymentMethod and the number of time it is used as count.
+
+ANS:  db.payments.aggregate([
+  {
+    $group: {
+      _id: "$paymentMethod",
+      count: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { count: -1 }
+  },
+  {
+    $limit: 1
+  },
+  {
+    $project: {
+      _id: 0,
+      paymentMethod: "$_id",
+      count: 1
+    }
+  }
+])
+
+Mongo Query 6:
+Write Mongo query to retrieve the ship_date and order_date of an order whose payment status is pending by payment _id.
+Hint: use MongoDB aggregation pipeline with $match, $lookup, $project, $unwind
+
+ANS:   db.payments.aggregate([
+  {
+    $match: { paymentstatus: "pending" }
+  },
+  {
+    $lookup: {
+      from: "order_details",
+      localField: "_id",
+      foreignField: "payment_id",
+      as: "order_details"
+    }
+  },
+  {
+    $unwind: "$order_details"
+  },
+  {
+    $lookup: {
+      from: "orders",
+      localField: "order_details.order_id",
+      foreignField: "_id",
+      as: "orders"
+    }
+  },
+  {
+    $unwind: "$orders"
+  },
+  {
+    $project: {
+      _id: 0,
+      ship_date: "$orders.ship_date",
+      order_date: "$orders.order_date"
+    }
+  }
+])
