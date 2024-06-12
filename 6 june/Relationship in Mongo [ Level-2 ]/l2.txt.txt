@@ -1,0 +1,641 @@
+Instructions
+
+Problem Statements
+
+1. Find the names of employees who work in the "Finance" department and have made sales on or after "2023-09-16.
+
+Ans:db.employees.aggregate([
+  {
+    $lookup: {
+      from: "departments",
+      localField: "department_id",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+  {
+    $unwind: "$department"
+  },
+  {
+    $match: {
+      "department.name": "Finance"
+    }
+  },
+  {
+    $lookup: {
+      from: "sales",
+      localField: "_id",
+      foreignField: "employee_id",
+      as: "sales"
+    }
+  },
+  {
+    $unwind: "$sales"
+  },
+  {
+    $match: {
+      "sales.sale_date": { $gte: ISODate("2023-09-16") }
+    }
+  },
+  {
+    $project: {
+      "employee_name": "$name"
+    }
+  }
+]);
+
+
+2. Find the total sales count and total sales amount for each employee who has made a sale, and sort the results by total sales amount in descending order.
+Ans :  db.sales.aggregate([
+  {
+    $group: {
+      _id: "$employee_id",
+      totalSalesCount: { $sum: 1 },
+      totalSalesAmount: { $sum: "$amount" }
+    }
+  },
+  {
+    $sort: { totalSalesAmount: -1 }
+  },
+  {
+    $lookup: {
+      from: "employees",
+      localField: "_id",
+      foreignField: "_id",
+      as: "employee"
+    }
+  },
+  {
+    $unwind: "$employee"
+  },
+  {
+    $project: {
+      "employee_name": "$employee.name",
+      "totalSalesCount": 1,
+      "totalSalesAmount": 1
+    }
+  }
+]);
+
+3. Retrieve a list of departments with more than 10 employees
+
+Ans:db.employees.aggregate([
+  {
+    $group: {
+      _id: "$department_id",
+      employeeCount: { $sum: 1 }
+    }
+  },
+  {
+    $match: {
+      employeeCount: { $gt: 10 }
+    }
+  },
+  {
+    $lookup: {
+      from: "departments",
+      localField: "_id",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+  {
+    $unwind: "$department"
+  },
+  {
+    $project: {
+      "department_name": "$department.name",
+      "employeeCount": 1
+    }
+  }
+]);
+
+
+4. Find the employees who have worked in the company for more than 5 years
+
+Ans: db.employees.aggregate([
+  {
+    $match: {
+      hire_date: { $lte: ISODate(new Date().setFullYear(new Date().getFullYear() - 5)) }
+    }
+  },
+  {
+    $project: {
+      "employee_name": "$name",
+      "hire_date": 1
+    }
+  }
+]);
+ 
+
+5. Find the employee with the highest salary
+
+Ans:db.employees.aggregate([
+  {
+    $sort: { salary: -1 }
+  },
+  {
+    $limit: 1
+  },
+  {
+    $project: {
+      "employee_name": "$name",
+      "salary": 1
+    }
+  }
+]);
+
+
+6. List the names and ages of employees in the "HR" department
+
+Ans: db.employees.aggregate([
+  {
+    $lookup: {
+      from: "departments",
+      localField: "department_id",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+  {
+    $unwind: "$department"
+  },
+  {
+    $match: {
+      "department.name": "HR"
+    }
+  },
+  {
+    $project: {
+      "employee_name": "$name",
+      "age": 1
+    }
+  }
+]);
+
+
+7. Retrieve the names of employees who have worked on the "Employee Management System" project
+
+Ans: db.employees.aggregate([
+  {
+    $lookup: {
+      from: "projects",
+      localField: "projects",
+      foreignField: "_id",
+      as: "projects"
+    }
+  },
+  {
+    $unwind: "$projects"
+  },
+  {
+    $match: {
+      "projects.name": "Employee Management System"
+    }
+  },
+  {
+    $project: {
+      "employee_name": "$name"
+    }
+  }
+]);
+
+
+8. Find the employees who have not made any sales
+
+Ans: db.employees.aggregate([
+  {
+    $lookup: {
+      from: "sales",
+      localField: "_id",
+      foreignField: "employee_id",
+      as: "sales"
+    }
+  },
+  {
+    $match: {
+      "sales": { $eq: [] }
+    }
+  },
+  {
+    $project: {
+      "employee_name": "$name"
+    }
+  }
+]);
+
+
+9. List the names of employees who have made a sale in September 2023
+
+Ans: db.sales.aggregate([
+  {
+    $match: {
+      sale_date: { $gte: ISODate("2023-09-01"), $lt: ISODate("2023-10-01") }
+    }
+  },
+  {
+    $group: {
+      _id: "$employee_id"
+    }
+  },
+  {
+    $lookup: {
+      from: "employees",
+      localField: "_id",
+      foreignField: "_id",
+      as: "employee"
+    }
+  },
+  {
+    $unwind: "$employee"
+  },
+  {
+    $project: {
+      "employee_name": "$employee.name"
+    }
+  }
+]);
+
+
+10. Find the departments where the average employee age is greater than 35
+
+Ans:  db.employees.aggregate([
+  {
+    $group: {
+      _id: "$department_id",
+      avgAge: { $avg: "$age" }
+    }
+  },
+  {
+    $match: {
+      avgAge: { $gt: 35 }
+    }
+  },
+  {
+    $lookup: {
+      from: "departments",
+      localField: "_id",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+  {
+    $unwind: "$department"
+  },
+  {
+    $project: {
+      "department_name": "$department.name",
+      "avgAge": 1
+    }
+  }
+]);
+
+
+11. Find the employees who have worked on at least three different projects
+
+Ans:  db.employees.aggregate([
+  {
+    $project: {
+      "employee_name": "$name",
+      "projectCount": { $size: "$projects" }
+    }
+  },
+  {
+    $match: {
+      "projectCount": { $gte: 3 }
+    }
+  }
+]);
+
+
+12. List the names of employees who have not been assigned to any project
+
+Ans: db.employees.aggregate([
+  {
+    $match: {
+      projects: { $eq: [] }
+    }
+  },
+  {
+    $project: {
+      "employee_name": "$name"
+    }
+  }
+]);
+
+
+13. Find the employees who have worked on projects from multiple departments
+
+Ans:db.employees.aggregate([
+  {
+    $lookup: {
+      from: "projects",
+      localField: "projects",
+      foreignField: "_id",
+      as: "projectDetails"
+    }
+  },
+  {
+    $unwind: "$projectDetails"
+  },
+  {
+    $group: {
+      _id: "$_id",
+      uniqueDepartments: { $addToSet: "$projectDetails.department" }
+    }
+  },
+  {
+    $match: {
+      "uniqueDepartments.1": { $exists: true }  // Check if there are at least two different departments
+    }
+  },
+  {
+    $lookup: {
+      from: "employees",
+      localField: "_id",
+      foreignField: "_id",
+      as: "employee"
+    }
+  },
+  {
+    $unwind: "$employee"
+  },
+  {
+    $project: {
+      "employee_name": "$employee.name"
+    }
+  }
+]);
+
+
+14. Find the employees who have the highest sales amount in a single sale
+
+Ans:db.sales.aggregate([
+  {
+    $sort: { amount: -1 }
+  },
+  {
+    $limit: 1
+  },
+  {
+    $lookup: {
+      from: "employees",
+      localField: "employee_id",
+      foreignField: "_id",
+      as: "employee"
+    }
+  },
+  {
+    $unwind: "$employee"
+  },
+  {
+    $project: {
+      "employee_name": "$employee.name",
+      "sale_amount": "$amount"
+    }
+  }
+]);
+
+
+15. Retrieve the names of employees who have not made a sale in the last 90 days
+
+Ans:db.employees.aggregate([
+  {
+    $lookup: {
+      from: "sales",
+      localField: "_id",
+      foreignField: "employee_id",
+      as: "sales"
+    }
+  },
+  {
+    $addFields: {
+      "recentSales": {
+        $filter: {
+          input: "$sales",
+          as: "sale",
+          cond: { $gte: ["$$sale.sale_date", ISODate(new Date().setDate(new Date().getDate() - 90))] }
+        }
+      }
+    }
+  },
+  {
+    $match: {
+      "recentSales": { $eq: [] }
+    }
+  },
+  {
+    $project: {
+      "employee_name": "$name"
+    }
+  }
+]);
+
+
+16. Find the departments where the total employee salaries exceed $500,000
+
+Ans: db.employees.aggregate([
+  {
+    $group: {
+      _id: "$department_id",
+      totalSalary: { $sum: "$salary" }
+    }
+  },
+  {
+    $match: {
+      totalSalary: { $gt: 500000 }
+    }
+  },
+  {
+    $lookup: {
+      from: "departments",
+      localField: "_id",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+  {
+    $unwind: "$department"
+  },
+  {
+    $project: {
+      "department_name": "$department.name",
+      "totalSalary": 1
+    }
+  }
+]);
+
+
+17. List the employees who have worked on the "Payroll Software" project and are older than 35
+
+Ans:  db.employees.aggregate([
+  {
+    $lookup: {
+      from: "projects",
+      localField: "projects",
+      foreignField: "_id",
+      as: "projects"
+    }
+  },
+  {
+    $unwind: "$projects"
+  },
+  {
+    $match: {
+      "projects.name": "Payroll Software",
+      age: { $gt: 35 }
+    }
+  },
+  {
+    $project: {
+      "employee_name": "$name",
+      "age": 1
+    }
+  }
+]);
+
+
+18. Find the total number of sales and the total sales amount for each employee in the "HR" department
+
+Ans:  db.employees.aggregate([
+  {
+    $lookup: {
+      from: "departments",
+      localField: "department_id",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+  {
+    $unwind: "$department"
+  },
+  {
+    $match: {
+      "department.name": "HR"
+    }
+  },
+  {
+    $lookup: {
+      from: "sales",
+      localField: "_id",
+      foreignField: "employee_id",
+      as: "sales"
+    }
+  },
+  {
+    $unwind: "$sales"
+  },
+  {
+    $group: {
+      _id: "$_id",
+      employee_name: { $first: "$name" },
+      totalSalesCount: { $sum: 1 },
+      totalSalesAmount: { $sum: "$sales.amount" }
+    }
+  }
+]);
+
+
+19. List the employees who have not been assigned to any project in the "Finance" department
+
+Ans:db.employees.aggregate([
+  {
+    $lookup: {
+      from: "departments",
+      localField: "department_id",
+      foreignField: "_id",
+      as: "department"
+    }
+  },
+  {
+    $unwind: "$department"
+  },
+  {
+    $match: {
+      "department.name": "Finance",
+      projects: { $eq: [] }
+    }
+  },
+  {
+    $project: {
+      "employee_name": "$name"
+    }
+  }
+]);
+
+
+20. List the employees who have worked on all projects in the "Engineering" department
+
+
+Ans:db.projects.aggregate([
+  {
+    $match: {
+      department: 103
+    }
+  },
+  {
+    $group: {
+      _id: null,
+      engineeringProjectIds: { $addToSet: "$_id" }
+    }
+  },
+  {
+    $lookup: {
+      from: "employees",
+      pipeline: [
+        {
+          $lookup: {
+            from: "projects",
+            localField: "projects",
+            foreignField: "_id",
+            as: "projectDetails"
+          }
+        },
+        {
+          $match: {
+            "projectDetails.department": 103
+          }
+        },
+        {
+          $addFields: {
+            engineeringProjects: {
+              $map: {
+                input: "$projectDetails",
+                as: "project",
+                in: "$$project._id"
+              }
+            }
+          }
+        }
+      ],
+      as: "employeesWithEngineeringProjects"
+    }
+  },
+  {
+    $unwind: "$employeesWithEngineeringProjects"
+  },
+  {
+    $project: {
+      "employee_name": "$employeesWithEngineeringProjects.name",
+      "projects": "$employeesWithEngineeringProjects.engineeringProjects",
+      "engineeringProjectIds": "$engineeringProjectIds"
+    }
+  },
+  {
+    $addFields: {
+      allEngineeringProjectsCovered: {
+        $setEquals: ["$projects", "$engineeringProjectIds"]
+      }
+    }
+  },
+  {
+    $match: {
+      allEngineeringProjectsCovered: true
+    }
+  },
+  {
+    $project: {
+      "employee_name": 1
+    }
+  }
+]);
